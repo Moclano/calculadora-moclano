@@ -49,7 +49,10 @@ p,.lead,.diag,.foot,.note{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
 .sec h2{font-size:clamp(22px,3vw,28px);font-weight:800}
 .sec-rule{height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:10px 0 20px}
 
-.calc{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:clamp(18px,3vw,32px);align-items:start}
+.calc{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:clamp(18px,3vw,32px);align-items:stretch}
+.calc>div{display:flex;flex-direction:column}
+.calc .panel{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.calc .fig{flex:1}
 .panel{background:var(--card);border:1px solid var(--line);padding:20px}
 .f{margin-bottom:18px}
 .f label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:700;margin-bottom:6px}
@@ -61,9 +64,9 @@ p,.lead,.diag,.foot,.note{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
 .inp input:focus,.f select:focus{border-color:var(--gold);outline:none}
 input[type=range]{width:100%;accent-color:var(--gold);height:30px}
 .rng{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:-4px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.presets button{border:1px solid var(--line);background:transparent;color:var(--ink);padding:6px 10px;font-size:13px;border-radius:2px;cursor:pointer;min-height:36px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
+.presets{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:4px}
+.presets button{border:1px solid var(--line);background:transparent;color:var(--ink);padding:6px 0;text-align:center;font-size:13px;border-radius:2px;cursor:pointer;min-height:36px}
 .presets button:hover{border-color:var(--gold)}
 
 .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -77,7 +80,7 @@ input[type=range]{width:100%;accent-color:var(--gold);height:30px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
 .chip{font-size:13px;font-weight:700;padding:3px 10px;border-radius:3px;background:light-dark(#ddf1ec,#16362f);color:light-dark(#1d6b55,#7fd3b6)}
 .chip.g{background:light-dark(#faebc8,#3d3015);color:light-dark(#8a5d00,#f0c56a)}
-.fig{position:relative;height:clamp(260px,34vw,360px);margin-top:12px;background:var(--card);border:1px solid var(--line);padding:12px}
+.fig{position:relative;min-height:clamp(260px,30vw,340px);margin-top:12px;background:var(--card);border:1px solid var(--line);padding:12px}
 .leg{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin-top:10px}
 .leg i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;background:var(--gold)}
 .leg i.d{background:repeating-linear-gradient(90deg,var(--ink) 0 5px,transparent 5px 9px)}
@@ -160,7 +163,7 @@ details[open] summary:before{content:"−"}
     <div class="f"><label for="capital">Capital inicial</label><div class="inp"><input type="number" id="capital" value="10000" min="0" step="100" inputmode="decimal"><span>€</span></div></div>
     <div class="f"><label for="aportacion">Aportación periódica</label><div class="inp"><input type="number" id="aportacion" value="200" min="0" step="50" inputmode="decimal"><span>€</span></div></div>
     <div class="f"><label for="tasa">Rentabilidad anual <output id="tasaVal">8,0%</output></label><input type="range" id="tasa" min="0" max="20" value="8" step="0.1"><div class="rng"><span>0%</span><span>20%</span></div>
-      <div class="presets" aria-label="Rentabilidades de referencia"><button type="button" data-r="2">2%</button><button type="button" data-r="4">4%</button><button type="button" data-r="6">6%</button><button type="button" data-r="8">8%</button><button type="button" data-r="10">10%</button></div></div>
+      <div class="presets" aria-label="Rentabilidades de referencia"><button type="button" data-r="2">2%</button><button type="button" data-r="4">4%</button><button type="button" data-r="6">6%</button><button type="button" data-r="8">8%</button><button type="button" data-r="10">10%</button><button type="button" data-r="12">12%</button><button type="button" data-r="14">14%</button></div></div>
     <div class="f"><label for="anos">Horizonte temporal <output id="anosVal">20 años</output></label><input type="range" id="anos" min="1" max="50" value="20" step="1"><div class="rng"><span>1 año</span><span>50 años</span></div></div>
     <div class="row2">
      <div class="f" style="margin-bottom:0"><label for="frecuencia">Frecuencia de aportación</label><select id="frecuencia"><option value="12">Mensual</option><option value="4">Trimestral</option><option value="2">Semestral</option><option value="1">Anual</option></select></div>
@@ -178,11 +181,11 @@ details[open] summary:before{content:"−"}
    <div class="chips"><span class="chip" id="rPct"></span><span class="chip g" id="rMulti"></span></div>
    <div class="fig"><canvas id="calcChart" aria-label="Evolución del capital final frente al capital invertido"></canvas></div>
    <div class="leg"><span><i></i>Capital final</span><span><i class="d"></i>Capital invertido</span><span><i class="s"></i>Intereses acumulados</span></div>
-   <div class="diag" id="diag"></div>
-   <div class="actions"><span class="pdfbar hide"><button class="btn pdfbtn" type="button">Descargar informe en PDF</button></span><button class="btn ghost" type="button" id="copy">Copiar resumen</button></div>
-   <div class="msg" id="msg"></div>
   </div>
  </div>
+ <div class="diag" id="diag" style="margin-top:22px"></div>
+ <div class="actions"><span class="pdfbar hide"><button class="btn pdfbtn" type="button">Descargar informe en PDF</button></span><button class="btn ghost" type="button" id="copy">Copiar resumen</button></div>
+ <div class="msg" id="msg"></div>
 </div></main>
 
 <section class="band" style="padding-top:0"><div class="wrap">
